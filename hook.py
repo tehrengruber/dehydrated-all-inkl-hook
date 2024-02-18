@@ -82,7 +82,10 @@ def deploy_challenge(kas_api: KASAPI, domain: str, challenge: str, token: str, *
 		print(f" + Challenge: {challenge}")
 		print(f" + Zone: {zone}")
 
-		name = f"_acme-challenge.{subdomain}"
+		if subdomain:
+			name = f"_acme-challenge.{subdomain}"
+		else:
+			name = "_acme-challenge"
 
 		existing_records = kas_api.get_dns_settings(zone_host=zone)
 		for entry in existing_records:
