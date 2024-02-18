@@ -137,7 +137,6 @@ def main(argv):
 		deploy_challenge(kas_api, *argv[1:])
 	else:
 		print(f"Invalid hook action: {hook_action}")
-		sys.exit(1)
 
 
 if __name__ == "__main__":
