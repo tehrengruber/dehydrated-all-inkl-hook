@@ -1,6 +1,7 @@
 import zeep
 import lxml
 import json
+import os
 
 type_attr = "{http://www.w3.org/2001/XMLSchema-instance}type"
 nil_attr = '{http://www.w3.org/2001/XMLSchema-instance}nil'
@@ -46,11 +47,11 @@ class KASAPI:
             # 'session_2fa': 123456             # optional: if activated, otp for 2fa
         }
 
-        soap_login = zeep.Client('./KasAuth.wsdl')
+        soap_login = zeep.Client(os.path.dirname(os.path.realpath(__file__)) + '/KasAuth.wsdl')
 
         self.username = username
         self.credential_token = soap_login.service.KasAuth(json.dumps(params))
-        self.soap_request = zeep.Client('./KasApi.wsdl')
+        self.soap_request = zeep.Client(os.path.dirname(os.path.realpath(__file__)) + '/KasApi.wsdl')
 
     def __getattr__(self, action):
         def request(**kwargs):

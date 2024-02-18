@@ -7,7 +7,7 @@ import dns
 import dns.exception
 import dns.resolver
 
-from kas_api import KASAPI
+from dehydrated_all_inkl_hook.kas_api import KASAPI
 
 
 def resolve_a_record(name):
