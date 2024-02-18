@@ -1,4 +1,4 @@
-#!python3
+#!/usr/sbin/python3
 import os
 import sys
 import time
