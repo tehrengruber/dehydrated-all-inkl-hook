@@ -1,0 +1,11 @@
+[project]
+name = "dehydrated_all_inkl_hook"
+version = "0.1.0"
+description = "A hook for dehydrated to support All-Inkl"
+authors = ["Till Ehrengruber <till@ehrengruber.ch>"]
+
+[dependencies]
+python = "^3.9"
+lxml = "^5.1.0"
+zeep = "^4.2.0"
+dnspython = "^2.1.0"

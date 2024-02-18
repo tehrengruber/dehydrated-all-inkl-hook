@@ -1,0 +1,43 @@
+<?xml version ='1.0' encoding ='UTF-8' ?><definitions name='KasApiAuthentication'
+  targetNamespace='https://kasserver.com/'
+  xmlns:tns='https://kasserver.com/'
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
+  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+  xmlns='http://schemas.xmlsoap.org/wsdl/'>
+
+
+<message name='authAnfrage'>
+  <part name='Params' type='xsd:anyType'/>
+</message>
+<message name='authAntwort'>
+  <part name='return' type='xsd:string'/>
+</message>
+
+<portType name='KasApiAuthenticationPortType'>
+  <operation name='KasAuth'>
+    <input message='tns:authAnfrage'/>
+    <output message='tns:authAntwort'/>
+  </operation>
+</portType>
+
+<binding name='KasApiAuthenticationBinding' type='tns:KasApiAuthenticationPortType'>
+  <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='KasAuth'>
+    <soap:operation soapAction='urn:xmethodsKasApiAuthentication#KasAuth'/>
+    <input>
+      <soap:body use='encoded' namespace='urn:xmethodsKasApiAuthentication' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </input>
+    <output>
+      <soap:body use='encoded' namespace='urn:xmethodsKasApiAuthentication' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </output>
+  </operation>
+</binding>
+
+<service name='KasApiAuthenticationService'>
+  <port name='KasApiAuthenticationPort' binding='tns:KasApiAuthenticationBinding'>
+    <soap:address location='https://kasapi.kasserver.com/soap/KasAuth.php'/>
+  </port>
+</service>
+</definitions>
