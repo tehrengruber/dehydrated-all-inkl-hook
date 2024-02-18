@@ -1,8 +1,10 @@
 [project]
 name = "dehydrated_all_inkl_hook"
 version = "0.1.0"
-description = "A hook for dehydrated to support All-Inkl"
-authors = ["Till Ehrengruber <till@ehrengruber.ch>"]
+description = "dns-01 hook script to use the ALL-INKL KAS API with dehydrated"
+authors = {
+    {name = "Till Ehrengruber", email = "till@ehrengruber.ch"}
+}
 
 [dependencies]
 python = "^3.9"
