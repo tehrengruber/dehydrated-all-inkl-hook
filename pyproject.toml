@@ -11,3 +11,12 @@ python = "^3.9"
 lxml = "^5.1.0"
 zeep = "^4.2.0"
 dnspython = "^2.1.0"
+
+[build-system]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+dehydrated_all_inkl_hook = "dehydrated_all_inkl_hook.hook:main"
