@@ -114,16 +114,7 @@ def deploy_challenge(kas_api: KASAPI, domain: str, challenge: str, token: str, *
 		sys.exit(1)
 
 
-def main(argv):
-	"""
-	Entry point of the script.
-
-	Parameters:
-		argv (list): Command-line arguments
-
-	Returns:
-		None
-	"""
+def main():
 	# Init KAS API endpoint
 	if "KAS_USERNAME" not in os.environ:
 		raise ValueError("Environment variable KAS_USERNAME not set.")
@@ -133,14 +124,14 @@ def main(argv):
 
 	kas_api = KASAPI(username=kas_username, password=kas_password)
 
-	hook_action = argv[0]
+	_, hook_action, *args = sys.argv
 	if hook_action == "clean_challenge":
-		clean_challenge(kas_api, *argv[1:])
+		clean_challenge(kas_api, *args)
 	elif hook_action == "deploy_challenge":
-		deploy_challenge(kas_api, *argv[1:])
+		deploy_challenge(kas_api, *args)
 	else:
 		print(f"Invalid hook action: {hook_action}")
 
 
 if __name__ == "__main__":
-	main(sys.argv[1:])
+	main()
