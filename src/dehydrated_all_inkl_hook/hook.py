@@ -45,7 +45,11 @@ def split_domain(domain):
 
 	>>> split_domain("bar.com")
 	('', 'bar.com')
+
+	>>> split_domain("*.bar.com")
+	('', 'bar.com')
 	"""
+	domain = domain.removeprefix("*.")
 	parts = domain.split(".")
 	assert len(parts)>=2
 	*subdomain, domain, tld = parts
@@ -57,7 +61,9 @@ def clean_challenge(kas_api: KASAPI, domain: str, _, token: str, **kwargs) -> No
 		subdomain, zone = split_domain(domain)
 		print(f" + Removing TXT record: {domain} => {token}")
 
-		name = f"_acme-challenge.{subdomain}"
+		name = f"_acme-challenge"
+		if subdomain:
+			name = f"{name}.{subdomain}"
 
 		existing_records = kas_api.get_dns_settings(zone_host=zone)
 		for entry in existing_records:
@@ -65,7 +71,7 @@ def clean_challenge(kas_api: KASAPI, domain: str, _, token: str, **kwargs) -> No
 				if entry["record_data"] != token:
 					raise ValueError("TXT record exists with different token.")
 				record_id = entry["record_id"]
-				kas_api.delete_dns_settings(record_id=record_id)
+				deletion_result = kas_api.delete_dns_settings(record_id=record_id)
 				print(f" + TXT record removed. (record_id: {record_id})")
 				break
 		else:
