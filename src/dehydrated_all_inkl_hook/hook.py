@@ -82,6 +82,7 @@ def clean_challenge(kas_api: KASAPI, domain: str, _, token: str, **kwargs) -> No
 
 
 def deploy_challenge(kas_api: KASAPI, domain: str, challenge: str, token: str, **kwargs) -> None:
+	record_id = None
 	try:
 		subdomain, zone = split_domain(domain)
 		print(f" + Creating TXT record: {domain} => {token}")
@@ -95,9 +96,7 @@ def deploy_challenge(kas_api: KASAPI, domain: str, challenge: str, token: str, *
 
 		existing_records = kas_api.get_dns_settings(zone_host=zone)
 		for entry in existing_records:
-			if entry["record_name"] == name:
-				if entry["record_data"] != token:
-					raise ValueError("TXT record already exists with different token.")
+			if entry["record_name"] == name and entry["record_data"] == token:
 				print(" + TXT record exists, skipping creation.")
 				return
 
@@ -108,15 +107,25 @@ def deploy_challenge(kas_api: KASAPI, domain: str, challenge: str, token: str, *
 			'record_data': token,
 			'record_aux': '0'
 		}
-		result = kas_api.add_dns_settings(**payload)
+		record_id = kas_api.add_dns_settings(**payload)
 
+		wait_time = 0
 		while not _has_dns_propagated(name+"."+zone, token):
+			if wait_time > 600:
+				print(" + DNS didn't propagate for 600s. Giving up.")
+				raise Exception()
 			print(" + DNS not propagated, waiting 30s...")
 			time.sleep(30)
+			wait_time += 30
 
 		print(" + TXT record created.")
 	except Exception as e:
 		print(f"Failed to deploy challenge for {domain}: {str(e)}")
+		if record_id:
+			time.sleep(1)  # cope with flood protection
+			deletion_result = kas_api.delete_dns_settings(record_id=record_id)
+			print(f" + TXT record removed. (record_id: {record_id})")
+
 		sys.exit(1)
 
 
